@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uber轉換網址</title>
+
+    <link rel="stylesheet" href="https://cbs.chyi.com.tw/css/bootstrap.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+    <script src="https://cbs.chyi.com.tw/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="content">
+            <h1><i class="fa fa-trophy" aria-hidden="true"></i>uber網址切換</h1>
+            <div class="row">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">需登入uber網址</label>
+                    <input type="text" class="form-control" id="all" placeholder="uber網址"  v-model="all">
+                  </div>
+
+                <div>轉換結果:
+                    <br><a :href="url" target="trans">{{realval}}</a>
+                </div>
+                <!-- https://auth.uber.com/v2/?breeze_local_zone=phx4&next_url=https%3A%2F%2Fxlb.uber.com%2Forders%2Ff2281327-be77-4ea9-8b08-97e332bfb0c4&state=5Lt13ACXg5VbUlfY9FFzUPjPuYxYFbcl_rEnvzxPvcw%3 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                all: '',
+                url: ''
+            },
+            methods:{
+                getGoodsHref:function(){
+                        let params = new URLSearchParams(this.all);
+
+                        result = ''
+                        if (params.get("next_url")) {
+                            result = params.get("next_url").replace('xlb.uber.com', 'eats.uber.com')
+                        }
+
+                        return result;
+                }
+            },
+            computed: {
+                realval: function () {
+
+
+                    let params = new URLSearchParams(this.all);
+
+                    result = ''
+                    if (params.get("next_url")) {
+                        result = params.get("next_url").replace('xlb.uber.com', 'eats.uber.com')
+                    }
+
+                    this.url = result;
+                    return result;
+                },
+
+            }
+
+
+        })
+
+    </script>
+</body>
+
+</html>
