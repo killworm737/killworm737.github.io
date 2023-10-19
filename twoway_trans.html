@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>uber轉換網址</title>
+
+    <link rel="stylesheet" href="https://cbs.chyi.com.tw/css/bootstrap.min.css" />
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+    <script src="https://cbs.chyi.com.tw/js/bootstrap.min.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div class="content">
+            <h1><i class="fa fa-trophy" aria-hidden="true"></i>uber網址切換</h1>
+            <div class="row">
+                <div class="mb-3">
+                    <label for="exampleFormControlInput1" class="form-label">需登入uber網址</label>
+                    <input type="text" class="form-control" placeholder="uber網址"  v-model="base">
+                  </div>
+
+                <div>原始資料:{{base}}</div>
+                <div>轉換結果(不用登入):<a :href="nologinurl" target="trans">{{nologinurl}}</a></div>
+                <div>轉換結果(要登入):<a :href="loginurl" target="trans">{{loginurl}}</a></div>
+                <!-- https://auth.uber.com/v2/?breeze_local_zone=phx4&next_url=https%3A%2F%2Fxlb.uber.com%2Forders%2Ff2281327-be77-4ea9-8b08-97e332bfb0c4&state=5Lt13ACXg5VbUlfY9FFzUPjPuYxYFbcl_rEnvzxPvcw%3 -->
+
+                {{realval}}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                base: 'https://auth.uber.com/v2/?breeze_local_zone=phx4&next_url=https%3A%2F%2Fxlb.uber.com%2Forders%2Ff2281327-be77-4ea9-8b08-97e332bfb0c4&state=5Lt13ACXg5VbUlfY9FFzUPjPuYxYFbcl_rEnvzxPvcw%3',
+                loginurl: '',
+                nologinurl: '',
+            },
+            computed: {
+                realval: function () {
+
+                    let params = new URLSearchParams(this.base);
+
+                    // console.log(this.base);
+                    result = ''
+                    if (params.get("next_url")) {
+                        result = params.get("next_url").replace('xlb.uber.com', 'eats.uber.com')
+                        this.nologinurl = result;
+                        this.loginurl = this.base;
+                    } else {
+
+                        let githubURL = new URL(this.base);
+
+                        // https://eats.uber.com/orders/f2281327-be77-4ea9-8b08-97e332bfb0c4
+                        this.nologinurl = this.base;
+
+
+                        console.log(githubURL.pathname);
+
+                        let pathname = githubURL.pathname.replace('/orders/', '').replace( 'eats.uber.com', 'xlb.uber.com')
+
+                        this.loginurl = 'https://auth.uber.com/v2/?&state=5Lt13ACXg5VbUlfY9FFzUPjPuYxYFbcl_rEnvzxPvcw%3&breeze_local_zone=phx4&next_url=https://eats.uber.com/tw/orders/' + pathname ;
+
+
+
+                    }
+
+                    return '';
+                },
+
+            }
+
+
+        })
+
+    </script>
+</body>
+
+</html>
